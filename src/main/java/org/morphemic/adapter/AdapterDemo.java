@@ -1,9 +1,14 @@
 package org.morphemic.adapter;
 
+import org.activeeon.morphemic.application.deployment.PAFactory;
 import org.activeeon.morphemic.infrastructure.deployment.PAResourceManagerGateway;
 import org.activeeon.morphemic.application.deployment.PASchedulerGateway;
-import org.activeeon.morphemic.utils.PAFactory;
+import org.apache.commons.configuration2.BaseConfiguration;
+import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.log4j.Logger;
+import org.morphemic.adapter.common.PAConfiguration;
+import org.morphemic.adapter.utils.ProtectionUtils;
 import org.ow2.proactive.scheduler.common.exception.UserException;
 import org.ow2.proactive.scheduler.common.job.JobId;
 import org.ow2.proactive.scheduler.common.job.TaskFlowJob;
@@ -54,18 +59,29 @@ public class AdapterDemo {
 
     public static void main(String[] args) {
 
-        PASchedulerGateway schedulerGateway = new PASchedulerGateway();
-        PAResourceManagerGateway resourceManagerGateway = new PAResourceManagerGateway();
+        Configuration config = new BaseConfiguration();
+
+        try {
+            // load ProActive configuration
+            config = PAConfiguration.loadPAConfiguration();
+        } catch (ConfigurationException ce) {
+            LOGGER.error("ERROR: " + ce.toString());
+        }
+
+        PASchedulerGateway schedulerGateway = new PASchedulerGateway(config.getString(PAConfiguration.REST_URL));
+        PAResourceManagerGateway resourceManagerGateway = new PAResourceManagerGateway(config.getString(PAConfiguration.REST_URL));
 
         String nodeSourceName = "AWSMORPHEMICUP";
         Integer numberVMs = 2;
 
         try {
             // Connecting to the RM
-            resourceManagerGateway.connect();
+            resourceManagerGateway.connect(ProtectionUtils.decrypt(config.getString(PAConfiguration.REST_LOGIN)),
+                    ProtectionUtils.decrypt(config.getString(PAConfiguration.REST_PASSWORD)));
 
             // Connecting to the Scheduler
-            schedulerGateway.connect();
+            schedulerGateway.connect(ProtectionUtils.decrypt(config.getString(PAConfiguration.REST_LOGIN)),
+                    ProtectionUtils.decrypt(config.getString(PAConfiguration.REST_PASSWORD)));
 
             LOGGER.info("Deploying VMs");
             resourceManagerGateway.deploySimpleAWSNodeSource(nodeSourceName, numberVMs);
