@@ -1,0 +1,40 @@
+plugins {
+    id 'java'
+}
+
+group 'org.activeeon'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    jcenter()
+
+    maven { url 'http://repository.activeeon.com/content/groups/proactive/' }
+}
+
+jar {
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+apply plugin: 'java'
+
+javadoc {
+    source = sourceSets.main.allJava
+    classpath = configurations.compile
+    destinationDir = file("${buildDir}/docs/javadoc")
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile group: 'org.apache.commons', name: 'commons-configuration2', version: '2.7'
+    compile group: 'org.ow2.proactive_grid_cloud_portal', name: 'rest-smartproxy', version: '10.1.0-SNAPSHOT'
+    compile group: 'org.ow2.proactive_grid_cloud_portal', name: 'rest-api', version: '10.1.0-SNAPSHOT'
+    compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.4'
+    compile group: 'org.jasypt', name: 'jasypt', version: '1.9.2'
+}
+
