@@ -11,9 +11,12 @@ import org.morphemic.adapter.common.PAConfiguration;
 import org.morphemic.adapter.utils.ProtectionUtils;
 import org.ow2.proactive.scheduler.common.exception.UserException;
 import org.ow2.proactive.scheduler.common.job.JobId;
+import org.ow2.proactive.scheduler.common.job.JobState;
 import org.ow2.proactive.scheduler.common.job.TaskFlowJob;
 import org.ow2.proactive.scheduler.common.task.ScriptTask;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,7 +74,7 @@ public class AdapterDemo {
         PASchedulerGateway schedulerGateway = new PASchedulerGateway(config.getString(PAConfiguration.REST_URL));
         PAResourceManagerGateway resourceManagerGateway = new PAResourceManagerGateway(config.getString(PAConfiguration.REST_URL));
 
-        String nodeSourceName = "AWSMORPHEMICUP";
+        String nodeSourceName = "AWSMORPHEMIC1";
         Integer numberVMs = 2;
 
         try {
@@ -96,6 +99,38 @@ public class AdapterDemo {
 
             JobId jobId = schedulerGateway.submit(myApplication);
             LOGGER.info("Job submitted with id = " + jobId);
+
+            // Wait for task
+            schedulerGateway.waitForTask(jobId.value(), myApplication.getTasks().get(0).getName(), 10000);
+
+            // Get task result
+            schedulerGateway.getTaskResult(jobId.value(), myApplication.getTasks().get(0).getName());
+
+            // To get and print the job state
+            JobState jobState = schedulerGateway.getJobState(jobId.value());
+            LOGGER.info("The job " + jobId + " is " + jobState.getStatus());
+
+            // Wait for job to finish
+            schedulerGateway.waitForJob(jobId.value(), 10000);
+
+            // Get job results map
+            List<String> jobIds = new ArrayList<>();
+            jobIds.add(jobId.value());
+            Map<Long, Map<String, Serializable>> resultsMap = schedulerGateway.getJobResultMaps(jobIds);
+            LOGGER.info("Result Map : " + resultsMap.toString());
+
+            // Uncomment to remove node
+            //resourceManagerGateway.removeNode(deployedNodes.get(0), false);
+
+            // Uncomment to undeploy node source
+            //resourceManagerGateway.undeployNodeSource(nodeSourceName, false);
+
+            // Uncomment to remove node source
+            //resourceManagerGateway.removeNodeSource(nodeSourceName, false);
+
+            // Uncomment to kill a job
+            //schedulerGateway.killJob(jobId);
+
 
         } catch (Exception e) {
             LOGGER.error(" ... Error: " + e.getMessage());
