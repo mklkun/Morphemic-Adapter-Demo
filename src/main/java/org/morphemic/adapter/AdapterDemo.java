@@ -36,7 +36,7 @@ public class AdapterDemo {
         myApplication.setVariables(PAFactory.variablesToJobVariables(jobVariables));
 
         //Creating MySQL WF task
-        ScriptTask mySQLTask = PAFactory.createBashScriptTask("Start_MySQL_Component", "Start_MySQL_Script.sh");
+        ScriptTask mySQLTask = PAFactory.createBashScriptTaskFromFile("Start_MySQL_Component", "Start_MySQL_Script.sh");
         mySQLTask.setPreScript(PAFactory.createSimpleScriptFromFIle("pre_script.sh", "bash"));
         mySQLTask.setPostScript(PAFactory.createSimpleScriptFromFIle("MySQL_post_script.groovy", "groovy"));
         mySQLTask.setSelectionScript(PAFactory.createGroovySelectionScript("check_node_name.groovy", new String[]{deployedNodes.get(0)}));
