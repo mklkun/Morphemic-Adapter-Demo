@@ -67,6 +67,15 @@ public class AdapterDemoV2 {
 
 
 
+            // Other tasks
+//            JSONArray jsonNodes;
+//            paGateway.addNodes(jsonNodes, "AdapterJob@503ed762");
+//
+//            JSONArray jsonMonitors;
+//            paGateway.addMonitors(jsonMonitors, "AdapterJob@503ed762");
+
+
+
             long submittedJobId = paGateway.submitJob("AdapterJob@503ed762");
             LOGGER.info("Job submitted with id = " + submittedJobId);
 
