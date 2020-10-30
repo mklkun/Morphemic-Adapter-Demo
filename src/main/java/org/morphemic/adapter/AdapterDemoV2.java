@@ -6,6 +6,7 @@ import org.apache.commons.configuration2.BaseConfiguration;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.morphemic.adapter.common.PAConfiguration;
 import org.morphemic.adapter.utils.ProtectionUtils;
@@ -68,9 +69,12 @@ public class AdapterDemoV2 {
 
 
             // Other tasks
-//            JSONArray jsonNodes;
-//            paGateway.addNodes(jsonNodes, "AdapterJob@503ed762");
-//
+            JSONArray jsonClouds=null;
+            paGateway.addClouds(jsonClouds);
+
+            JSONArray jsonNodes=null;
+            paGateway.addNodes(jsonNodes, "AdapterJob@503ed762");
+
 //            JSONArray jsonMonitors;
 //            paGateway.addMonitors(jsonMonitors, "AdapterJob@503ed762");
 
