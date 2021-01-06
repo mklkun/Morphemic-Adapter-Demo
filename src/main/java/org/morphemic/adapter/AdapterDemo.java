@@ -86,8 +86,12 @@ public class AdapterDemo {
             schedulerGateway.connect(ProtectionUtils.decrypt(config.getString(PAConfiguration.REST_LOGIN)),
                     ProtectionUtils.decrypt(config.getString(PAConfiguration.REST_PASSWORD)));
 
+            String awsUsername = "";
+            String awsKey = "";
+            String rmHostname = "";
+
             LOGGER.info("Deploying VMs");
-            resourceManagerGateway.deploySimpleAWSNodeSource(nodeSourceName, numberVMs);
+            resourceManagerGateway.deploySimpleAWSNodeSource(awsUsername, awsKey, rmHostname, nodeSourceName, numberVMs);
 
             LOGGER.info("Preparation of deployed node names.");
             List<String> deployedNodes = resourceManagerGateway.getAsyncDeployedNodesInformation(nodeSourceName);
