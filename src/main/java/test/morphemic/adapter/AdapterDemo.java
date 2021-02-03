@@ -1,4 +1,4 @@
-package org.morphemic.adapter;
+package test.morphemic.adapter;
 
 import org.activeeon.morphemic.application.deployment.PAFactory;
 import org.activeeon.morphemic.infrastructure.deployment.PAResourceManagerGateway;
@@ -7,14 +7,15 @@ import org.apache.commons.configuration2.BaseConfiguration;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.log4j.Logger;
-import org.morphemic.adapter.common.PAConfiguration;
-import org.morphemic.adapter.utils.ProtectionUtils;
+import test.morphemic.adapter.common.PAConfiguration;
+import test.morphemic.adapter.utils.ProtectionUtils;
 import org.ow2.proactive.scheduler.common.exception.UserException;
 import org.ow2.proactive.scheduler.common.job.JobId;
 import org.ow2.proactive.scheduler.common.job.JobState;
 import org.ow2.proactive.scheduler.common.job.TaskFlowJob;
 import org.ow2.proactive.scheduler.common.task.ScriptTask;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,7 +40,11 @@ public class AdapterDemo {
         ScriptTask mySQLTask = PAFactory.createBashScriptTaskFromFile("Start_MySQL_Component", "Start_MySQL_Script.sh");
         mySQLTask.setPreScript(PAFactory.createSimpleScriptFromFIle("pre_script.sh", "bash"));
         mySQLTask.setPostScript(PAFactory.createSimpleScriptFromFIle("MySQL_post_script.groovy", "groovy"));
-        mySQLTask.setSelectionScript(PAFactory.createGroovySelectionScript("check_node_name.groovy", new String[]{deployedNodes.get(0)}));
+        try {
+            mySQLTask.setSelectionScript(PAFactory.createGroovySelectionScript("check_node_name.groovy", new String[]{deployedNodes.get(0)}));
+        } catch (IOException e) {
+            LOGGER.error(e.getStackTrace());
+        }
         Map<String, String> mySQLvariables = new HashMap<>();
         mySQLvariables.put("INSTANCE_NAME", "ComponentMySql");
         mySQLTask.setVariables(PAFactory.variablesToTaskVariables(mySQLvariables));
@@ -47,7 +52,11 @@ public class AdapterDemo {
         //Creating Wordpress WF task
         ScriptTask myWordpressTask = PAFactory.createBashScriptTask("Start_Wordpress_Component", "Start_Wordpress_Script.sh");
         myWordpressTask.setPreScript(PAFactory.createSimpleScriptFromFIle("pre_script.sh", "bash"));
-        myWordpressTask.setSelectionScript(PAFactory.createGroovySelectionScript("check_node_name.groovy", new String[]{deployedNodes.get(1)}));
+        try {
+            myWordpressTask.setSelectionScript(PAFactory.createGroovySelectionScript("check_node_name.groovy", new String[]{deployedNodes.get(1)}));
+        } catch (IOException e) {
+            LOGGER.error(e.getStackTrace());
+        }
         Map<String, String> taskVariables = new HashMap<>();
         taskVariables.put("INSTANCE_NAME", "ComponentMyWordpress");
         myWordpressTask.setVariables(PAFactory.variablesToTaskVariables(taskVariables));
