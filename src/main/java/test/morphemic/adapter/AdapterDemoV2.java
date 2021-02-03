@@ -1,4 +1,4 @@
-package org.morphemic.adapter;
+package test.morphemic.adapter;
 
 import org.activeeon.morphemic.PAGateway;
 import org.activeeon.morphemic.model.Job;
@@ -7,8 +7,8 @@ import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
-import org.morphemic.adapter.common.PAConfiguration;
-import org.morphemic.adapter.utils.ProtectionUtils;
+import test.morphemic.adapter.common.PAConfiguration;
+import test.morphemic.adapter.utils.ProtectionUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;

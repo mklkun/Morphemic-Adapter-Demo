@@ -1,0 +1,12 @@
+[
+	{
+		"nodeName": "component-wordpress-instance-1-0",
+		"taskName": "Component_Wordpress",
+		"nodeCandidateInformation": {
+			"cloudID": "awsbf6b9a0b5b22e1c4b08d7b508487b7e2",
+			"locationName": "eu-west-1",
+			"imageProviderId": "ami-09ddc592784e0c759",
+			"hardwareProviderId": "m3.large"
+		}
+	}
+]

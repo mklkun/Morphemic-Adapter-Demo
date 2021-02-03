@@ -1,0 +1,55 @@
+{
+	"communications": [{
+			"portProvided": "ComponentMySqlPort",
+			"portRequired": "DBRequiredPort"
+		}
+	],
+	"jobInformation": {
+		"name": "FCRDeployment_JOB",
+		"id": "ExampleWithDocker"
+	},
+	"tasks": [{
+			"installation": {
+					"environment": {
+						"MYSQL_DATABASE": "meldb",
+						"MYSQL_PASSWORD": "testpwd",
+						"port": "3306:3306",
+						"MYSQL_USER": "melodic",
+						"MYSQL_ROOT_PASSWORD": "admin"
+					},
+					"dockerImage": "mariadb",
+					"type": "docker"
+				},
+			"name": "Component_MySql",
+			"ports": [{
+					"port": 3306,
+					"name": "ComponentMySqlPort",
+					"type": "PortProvided"
+				}
+			]
+		}, {
+			"installation": {
+					"environment": {
+						"WORDPRESS_DB_USER": "melodic",
+						"WORDPRESS_DB_PASSWORD": "testpwd",
+						"WORDPRESS_DB_HOST": "$PUBLIC_DBRequiredPort",
+						"WORDPRESS_DB_NAME": "meldb",
+						"port": "80:80"
+					},
+					"dockerImage": "wordpress",
+					"type": "docker"
+				},
+			"name": "Component_Wordpress",
+			"ports": [{
+					"port": 80,
+					"name": "WrodpressProvidedPort",
+					"type": "PortProvided"
+				}, {
+					"name": "DBRequiredPort",
+					"type": "PortRequired",
+					"isMandatory": false
+				}
+			]
+		}
+	]
+}

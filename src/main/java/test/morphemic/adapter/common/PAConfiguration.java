@@ -1,4 +1,4 @@
-package org.morphemic.adapter.common;
+package test.morphemic.adapter.common;
 
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.PropertiesConfiguration;
@@ -18,6 +18,8 @@ public class PAConfiguration {
      * The default configuration file
      */
     public static final String PROPERTIES_FILE = "proactive.properties";
+
+    public static final String PA_URL = "pa.url";
 
     public static final String REST_URL = "pa.rest.url";
 

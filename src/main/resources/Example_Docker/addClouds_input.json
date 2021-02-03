@@ -1,0 +1,37 @@
+[
+	{
+		"cloudID": "awsbf6b9a0b5b22e1c4b08d7b508487b7e2",
+		"cloudProviderName": "aws-ec2",
+		"cloudType": "PUBLIC",
+		"securityGroup": null,
+		"endpoint": null,
+		"scope": {
+			"prefix": null,
+			"value": null
+		},
+		"identityVersion": null,
+		"credentials": {
+				"user": null,
+				"secret": null,
+				"domain": null
+			}
+	},
+	{
+		"cloudID": "osbf6b9a0b5b2asdasdas8d7b508487b7e2",
+		"cloudProviderName": "openstack",
+		"cloudType": "PRIVATE",
+		"securityGroup": null,
+		"endpoint": null,
+		"scope": {
+			"prefix": null,
+			"value": null
+		},
+		"identityVersion": null,
+		"credentials": {
+			"user": null,
+			"secret": null,
+			"domain": null
+		}
+	}
+]
+

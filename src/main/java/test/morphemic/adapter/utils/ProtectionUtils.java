@@ -1,4 +1,4 @@
-package org.morphemic.adapter.utils;
+package test.morphemic.adapter.utils;
 
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 
