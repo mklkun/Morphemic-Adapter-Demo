@@ -33,6 +33,8 @@ public class AdapterDemoThreaded {
             System.out.println("ERROR: " + ce.toString());
         }
 
+        // some dummy commit
+
         String paURL = config.getString(PAConfiguration.PA_URL);
         String paUsername = ProtectionUtils.decrypt(config.getString(PAConfiguration.REST_LOGIN));
         String paPassword = ProtectionUtils.decrypt(config.getString(PAConfiguration.REST_PASSWORD));
