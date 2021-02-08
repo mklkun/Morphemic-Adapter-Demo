@@ -37,7 +37,7 @@ public class AdapterDemoThreaded {
         String paUsername = ProtectionUtils.decrypt(config.getString(PAConfiguration.REST_LOGIN));
         String paPassword = ProtectionUtils.decrypt(config.getString(PAConfiguration.REST_PASSWORD));
 
-        // some dummy commit 2
+        // some dummiest commit 2
 
         JSONObject jsonJob = null;
         JSONArray jsonClouds = null;
