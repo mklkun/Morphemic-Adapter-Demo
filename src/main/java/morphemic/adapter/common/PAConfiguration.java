@@ -1,4 +1,4 @@
-package test.morphemic.adapter.common;
+package morphemic.adapter.common;
 
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.PropertiesConfiguration;

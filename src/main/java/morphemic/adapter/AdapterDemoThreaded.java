@@ -1,4 +1,4 @@
-package test.morphemic.adapter;
+package morphemic.adapter;
 
 import org.activeeon.morphemic.PAGateway;
 import org.activeeon.morphemic.model.Job;
@@ -8,8 +8,8 @@ import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import test.morphemic.adapter.common.PAConfiguration;
-import test.morphemic.adapter.utils.ProtectionUtils;
+import morphemic.adapter.common.PAConfiguration;
+import morphemic.adapter.utils.ProtectionUtils;
 
 import java.io.IOException;
 import java.nio.file.Files;

@@ -1,4 +1,4 @@
-package test.morphemic.adapter;
+package morphemic.adapter;
 
 import org.activeeon.morphemic.PAGateway;
 import org.activeeon.morphemic.model.Job;
@@ -7,8 +7,9 @@ import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
-import test.morphemic.adapter.common.PAConfiguration;
-import test.morphemic.adapter.utils.ProtectionUtils;
+import org.ow2.proactive.scheduler.common.exception.NotConnectedException;
+import morphemic.adapter.common.PAConfiguration;
+import morphemic.adapter.utils.ProtectionUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -82,11 +83,11 @@ public class AdapterDemoV2 {
             long submittedJobId = paGateway.submitJob("AdapterJob@503ed762");
             LOGGER.info("Job submitted with id = " + submittedJobId);
 
+            paGateway.disconnect();
+
 
         } catch (Exception e) {
             LOGGER.error(" ... Error: " + e.getMessage());
-        } finally {
-            paGateway.disconnect();
         }
         LOGGER.info("End.");
     }
