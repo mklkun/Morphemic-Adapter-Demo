@@ -1,4 +1,4 @@
-package test.morphemic.adapter;
+package morphemic.adapter;
 
 import org.activeeon.morphemic.application.deployment.PAFactory;
 import org.activeeon.morphemic.infrastructure.deployment.PAResourceManagerGateway;
@@ -7,8 +7,8 @@ import org.apache.commons.configuration2.BaseConfiguration;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.log4j.Logger;
-import test.morphemic.adapter.common.PAConfiguration;
-import test.morphemic.adapter.utils.ProtectionUtils;
+import morphemic.adapter.common.PAConfiguration;
+import morphemic.adapter.utils.ProtectionUtils;
 import org.ow2.proactive.scheduler.common.exception.UserException;
 import org.ow2.proactive.scheduler.common.job.JobId;
 import org.ow2.proactive.scheduler.common.job.JobState;

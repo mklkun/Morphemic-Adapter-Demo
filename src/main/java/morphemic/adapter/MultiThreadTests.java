@@ -1,4 +1,4 @@
-package test.morphemic.adapter;
+package morphemic.adapter;
 
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
