@@ -59,13 +59,13 @@ public class AdapterDemoScaling {
         nodeNames.add("component-App-1-3");
         nodeNames.add("component-App-1-4");
 
-//        paGateway.addScaleOutTask(nodeNames,
-//                                  jsonJob.optJSONObject("jobInformation").optString("id"),
-//                                  taskName);
+        paGateway.addScaleOutTask(nodeNames,
+                                  jsonJob.optJSONObject("jobInformation").optString("id"),
+                                  taskName);
 
-        paGateway.addScaleInTask(nodeNames,
-                                 jsonJob.optJSONObject("jobInformation").optString("id"),
-                                 taskName);
+//        paGateway.addScaleInTask(nodeNames,
+//                                 jsonJob.optJSONObject("jobInformation").optString("id"),
+//                                 taskName);
 
 //        paGateway.removeClouds(Collections.singletonList("awsbf6b9a0b5b22e1c4b08d7b508487b7e2"), true);
 

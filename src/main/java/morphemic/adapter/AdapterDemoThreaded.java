@@ -75,7 +75,7 @@ public class AdapterDemoThreaded {
             LOGGER.warn("INTERRUPTION: ", ie);
         }
 
-//        Adding Nodes to components in a multi-threaded fashion
+        // Adding Nodes to components in a multi-threaded fashion
         MultiThreadTests multiThreadTests1 = new MultiThreadTests(paGateway,
                                                                   jsonNodesArray1,
                                                                   jsonJob.optJSONObject("jobInformation")
@@ -103,17 +103,17 @@ public class AdapterDemoThreaded {
 //        paGateway.addEmsDeployment(nodeNames, "Dummy_bearer");
 
         // Verifying the job from the database
-//        Job jobToSubmit = EntityManagerHelper.find(Job.class, jsonJob.optJSONObject("jobInformation").optString("id"));
-//        EntityManagerHelper.refresh(jobToSubmit);
-//        LOGGER.info("Job found to submit: " + jobToSubmit.toString());
+        Job jobToSubmit = EntityManagerHelper.find(Job.class, jsonJob.optJSONObject("jobInformation").optString("id"));
+        EntityManagerHelper.refresh(jobToSubmit);
+        LOGGER.info("Job found to submit: " + jobToSubmit.toString());
 
         // Submitting the job to deployment
-//        long submittedJobId = paGateway.submitJob(jsonJob.optJSONObject("jobInformation").optString("id"));
-//        LOGGER.info("Submitted job id: " + submittedJobId);
+        long submittedJobId = paGateway.submitJob(jsonJob.optJSONObject("jobInformation").optString("id"));
+        LOGGER.info("Submitted job id: " + submittedJobId);
 
         try {
             LOGGER.info("Waiting ...");
-            Thread.sleep(60000);
+            Thread.sleep(30000);
         } catch (InterruptedException ie) {
             LOGGER.warn("INTERRUPTION: ", ie);
         }
