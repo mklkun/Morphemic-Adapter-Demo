@@ -1,0 +1,22 @@
+[
+	{
+		"nodeName": "component-App-1-0",
+		"taskName": "Component_App",
+		"nodeCandidateInformation": {
+			"cloudID": "awsbf6b9a0b7e2",
+			"locationName": "eu-west-1",
+			"imageProviderId": "ami-09ddc592784e0c759",
+			"hardwareProviderId": "m3.xlarge"
+		}
+	},
+	{
+		"nodeName": "component-LB-1-0",
+		"taskName": "Component_LB",
+		"nodeCandidateInformation": {
+			"cloudID": "awsbf6b9a0b7e2",
+			"locationName": "eu-west-1",
+			"imageProviderId": "ami-09ddc592784e0c759",
+			"hardwareProviderId": "m3.large"
+		}
+	}
+]

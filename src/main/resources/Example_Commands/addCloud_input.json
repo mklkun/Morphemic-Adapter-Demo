@@ -1,0 +1,21 @@
+[
+	{
+		"cloudID": "awsbf6b9a0b7e2",
+		"cloudProviderName": "aws-ec2",
+		"cloudType": "PUBLIC",
+		"securityGroup": null,
+		"endpoint": null,
+		"scope": {
+			"prefix": null,
+			"value": null
+		},
+		"identityVersion": null,
+		"credentials": {
+				"user": "USER",
+				"secret": "SECRET",
+				"domain": null
+		},
+		"networkId": null
+	}
+]
+

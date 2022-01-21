@@ -103,7 +103,7 @@ public class AdapterDemo {
             resourceManagerGateway.deploySimpleAWSNodeSource(awsUsername, awsKey, rmHostname, nodeSourceName, numberVMs);
 
             LOGGER.info("Preparation of deployed node names.");
-            List<String> deployedNodes = resourceManagerGateway.getAsyncDeployedNodesInformation(nodeSourceName);
+            List<String> deployedNodes = resourceManagerGateway.getAsyncDeployedNodesInformation(nodeSourceName, "");
 
             LOGGER.info("deployedNodes = " + deployedNodes.toString());
 

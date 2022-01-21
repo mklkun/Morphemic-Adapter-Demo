@@ -1,0 +1,90 @@
+{
+	"communications": [{
+			"portProvided": "ComponentDBPort",
+			"portRequired": "ComponentPortDbReq"
+		}, {
+			"portProvided": "ComponentAppPort",
+			"portRequired": "ComponentPortAppReq"
+		}
+	],
+	"jobInformation": {
+		"name": "FCRLight_Deployment_JOB",
+		"id": "FCRnewLight"
+	},
+	"tasks": [{
+			"name": "Component_App",
+			"installation": {
+					"preInstall": "echo \"Hello from Component_App preInstall script\"",
+					"stop": null,
+					"install": null,
+					"postInstall": "echo \"Hello from Component_App postInstall script\"",
+					"start": "echo \"Hello from Component_App Start script\"",
+					"update": null,
+					"startDetection": null,
+					"type": "commands",
+					"operatingSystem": {
+						"operatingSystemFamily": "UBUNTU",
+						"operatingSystemVersion": 2004
+					}
+				},
+			"ports": [{
+					"port": 8087,
+					"name": "ComponentAppPort",
+					"type": "PortProvided"
+				}, {
+					"name": "ComponentPortDbReq",
+					"type": "PortRequired",
+					"isMandatory": true
+				}
+			]
+		}, {
+			"name": "Component_LB",
+			"installation": {
+					"preInstall": "echo \"Hello from Component_LB preInstall script\"",
+					"stop": null,
+					"install": "echo \"Hello from Component_LB Install script\"",
+					"postInstall": "echo \"Hello from Component_LB postInstall script\"",
+					"start": "echo \"Hello from Component_LB Start script\"",
+					"update": "echo \"Hello from Component_LB Update script\"",
+					"startDetection": null,
+					"type": "commands",
+					"operatingSystem": {
+						"operatingSystemFamily": "UBUNTU",
+						"operatingSystemVersion": 2004
+					}
+				},
+			"ports": [{
+					"port": 8087,
+					"name": "ComponentLBPort",
+					"type": "PortProvided"
+				}, {
+					"name": "ComponentPortAppReq",
+					"type": "PortRequired",
+					"isMandatory": false
+				}
+			]
+		}, {
+			"name": "Component_DB",
+			"installation": {
+					"preInstall": "echo \"Hello from Component_DB preInstall script\"",
+					"stop": null,
+					"install": "echo \"Hello from Component_DB Install script\"",
+					"postInstall": "echo \"Hello from Component_DB postInstall script\"",
+					"start": "echo \"Hello from Component_DB Start script\"",
+					"update": null,
+					"startDetection": null,
+					"type": "commands",
+					"operatingSystem": {
+						"operatingSystemFamily": "UBUNTU",
+						"operatingSystemVersion": 2004
+					}
+				},
+			"ports": [{
+					"port": 3306,
+					"name": "ComponentDBPort",
+					"type": "PortProvided"
+				}
+			]
+		}
+	]
+}
