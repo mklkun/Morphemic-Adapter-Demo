@@ -32,8 +32,8 @@ javadoc {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     // Uncomment the line 35 and comment the line 36 if you want to use your local builded jar
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-//    compile group: 'org.activeeon', name: 'scheduling-abstraction-layer', version: '3.7-SNAPSHOT'
+//    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile group: 'org.activeeon', name: 'scheduling-abstraction-layer', version: '3.7-SNAPSHOT'
     compile group: 'org.json', name: 'json', version: '20180130'
     compile group: 'org.apache.commons', name: 'commons-configuration2', version: '2.7'
     compile group: 'org.ow2.proactive_grid_cloud_portal', name: 'rest-smartproxy', version: '10.1.0-SNAPSHOT'
