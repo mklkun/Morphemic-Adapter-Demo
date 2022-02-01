@@ -1,156 +1,119 @@
 package morphemic.adapter;
 
-import org.activeeon.morphemic.application.deployment.PAFactory;
-import org.activeeon.morphemic.infrastructure.deployment.PAResourceManagerGateway;
-import org.activeeon.morphemic.application.deployment.PASchedulerGateway;
+import org.activeeon.morphemic.PAGateway;
+import org.activeeon.morphemic.model.Job;
+import org.activeeon.morphemic.service.EntityManagerHelper;
+import org.activeeon.morphemic.service.Utils;
 import org.apache.commons.configuration2.BaseConfiguration;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.log4j.Logger;
 import morphemic.adapter.common.PAConfiguration;
 import morphemic.adapter.utils.ProtectionUtils;
-import org.ow2.proactive.scheduler.common.exception.UserException;
-import org.ow2.proactive.scheduler.common.job.JobId;
-import org.ow2.proactive.scheduler.common.job.JobState;
-import org.ow2.proactive.scheduler.common.job.TaskFlowJob;
-import org.ow2.proactive.scheduler.common.task.ScriptTask;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.ow2.proactive.scheduler.common.exception.NotConnectedException;
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.File;
+
 
 public class AdapterDemo {
 
     private static final Logger LOGGER = Logger.getLogger(AdapterDemo.class);
 
-    private static TaskFlowJob createApplicationWF(List<String> deployedNodes) throws UserException {
-        TaskFlowJob myApplication = new TaskFlowJob();
-
-        myApplication.setName("Morphemic_Example_1");
-        Map<String, String> jobVariables = new HashMap<>();
-        jobVariables.put("DB_USER", "wordpress");
-        jobVariables.put("DB_PASSWORD", "pressword");
-        jobVariables.put("DB_NAME", "wordpress");
-        myApplication.setVariables(PAFactory.variablesToJobVariables(jobVariables));
-
-        //Creating MySQL WF task
-        ScriptTask mySQLTask = PAFactory.createBashScriptTaskFromFile("Start_MySQL_Component", "Start_MySQL_Script.sh");
-        mySQLTask.setPreScript(PAFactory.createSimpleScriptFromFIle("pre_script.sh", "bash"));
-        mySQLTask.setPostScript(PAFactory.createSimpleScriptFromFIle("MySQL_post_script.groovy", "groovy"));
-        try {
-            mySQLTask.setSelectionScript(PAFactory.createGroovySelectionScript("check_node_name.groovy", new String[]{deployedNodes.get(0)}));
-        } catch (IOException e) {
-            LOGGER.error(e.getStackTrace());
-        }
-        Map<String, String> mySQLvariables = new HashMap<>();
-        mySQLvariables.put("INSTANCE_NAME", "ComponentMySql");
-        mySQLTask.setVariables(PAFactory.variablesToTaskVariables(mySQLvariables));
-
-        //Creating Wordpress WF task
-        ScriptTask myWordpressTask = PAFactory.createBashScriptTask("Start_Wordpress_Component", "Start_Wordpress_Script.sh");
-        myWordpressTask.setPreScript(PAFactory.createSimpleScriptFromFIle("pre_script.sh", "bash"));
-        try {
-            myWordpressTask.setSelectionScript(PAFactory.createGroovySelectionScript("check_node_name.groovy", new String[]{deployedNodes.get(1)}));
-        } catch (IOException e) {
-            LOGGER.error(e.getStackTrace());
-        }
-        Map<String, String> taskVariables = new HashMap<>();
-        taskVariables.put("INSTANCE_NAME", "ComponentMyWordpress");
-        myWordpressTask.setVariables(PAFactory.variablesToTaskVariables(taskVariables));
-        myWordpressTask.addDependence(mySQLTask);
-
-        //Adding tasks to the workflow
-        myApplication.addTask(mySQLTask);
-        myApplication.addTask(myWordpressTask);
-
-        return myApplication;
-    }
+    private static final String EXAMPLES_RELATIVE_PATH = "Example_Commands" + File.separator;
 
     public static void main(String[] args) {
 
+        LOGGER.info("Begin");
+
         Configuration config = new BaseConfiguration();
 
+        // Loading the configuration file
         try {
             // load ProActive configuration
             config = PAConfiguration.loadPAConfiguration();
         } catch (ConfigurationException ce) {
-            LOGGER.error("ERROR: " + ce.toString());
+            LOGGER.error("ERROR: ", ce);
         }
 
-        PASchedulerGateway schedulerGateway = new PASchedulerGateway(config.getString(PAConfiguration.REST_URL));
-        PAResourceManagerGateway resourceManagerGateway = new PAResourceManagerGateway(config.getString(PAConfiguration.REST_URL));
+        // Reading ProActive's URL, login and password from configuration file
+        String paURL = config.getString(PAConfiguration.PA_URL);
+        String paUsername = ProtectionUtils.decrypt(config.getString(PAConfiguration.REST_LOGIN));
+        String paPassword = ProtectionUtils.decrypt(config.getString(PAConfiguration.REST_PASSWORD));
 
-        String nodeSourceName = "AWSMORPHEMIC1";
-        Integer numberVMs = 2;
+        // Instantiating SAL's gateway with the ProActive server URL
+        PAGateway paGateway = new PAGateway(paURL);
+
+        // Connecting SAL to ProActive
+        try {
+            paGateway.connect(paUsername, paPassword);
+            LOGGER.info("Connected!");
+        } catch (Exception e) {
+            LOGGER.error("ERROR: ", e);
+            System.exit(1);
+        }
+
+        // Reading the job, clouds and nodes JSON definitions
+        JSONObject jsonJob = new JSONObject(Utils.getContentWithFileName(EXAMPLES_RELATIVE_PATH + "Job_commands_input.json"));
+        JSONArray jsonClouds = new JSONArray(Utils.getContentWithFileName(EXAMPLES_RELATIVE_PATH + "addCloud_input.json"));
+        JSONArray jsonNodesArray1 = new JSONArray(Utils.getContentWithFileName(EXAMPLES_RELATIVE_PATH + "addNodes_input1.json"));
+        JSONArray jsonNodesArray2 = new JSONArray(Utils.getContentWithFileName(EXAMPLES_RELATIVE_PATH + "addNodes_input2.json"));
+
+        // Adding cloud definitions
+        paGateway.addClouds(jsonClouds);
+        LOGGER.info("Cloud added.");
+
+        // Defining an application job
+        LOGGER.info("Creating job: " + jsonJob);
+        paGateway.createJob(jsonJob);
 
         try {
-            // Connecting to the RM
-            resourceManagerGateway.connect(ProtectionUtils.decrypt(config.getString(PAConfiguration.REST_LOGIN)),
-                    ProtectionUtils.decrypt(config.getString(PAConfiguration.REST_PASSWORD)));
-
-            // Connecting to the Scheduler
-            schedulerGateway.connect(ProtectionUtils.decrypt(config.getString(PAConfiguration.REST_LOGIN)),
-                    ProtectionUtils.decrypt(config.getString(PAConfiguration.REST_PASSWORD)));
-
-            String awsUsername = "";
-            String awsKey = "";
-            String rmHostname = "";
-
-            LOGGER.info("Deploying VMs");
-            resourceManagerGateway.deploySimpleAWSNodeSource(awsUsername, awsKey, rmHostname, nodeSourceName, numberVMs);
-
-            LOGGER.info("Preparation of deployed node names.");
-            List<String> deployedNodes = resourceManagerGateway.getAsyncDeployedNodesInformation(nodeSourceName, "");
-
-            LOGGER.info("deployedNodes = " + deployedNodes.toString());
-
-            LOGGER.info("Creating application workflow.");
-            TaskFlowJob myApplication = createApplicationWF(deployedNodes);
-
-            JobId jobId = schedulerGateway.submit(myApplication);
-            LOGGER.info("Job submitted with id = " + jobId);
-
-            // Wait for task
-            schedulerGateway.waitForTask(jobId.value(), myApplication.getTasks().get(0).getName(), 10000);
-
-            // Get task result
-            schedulerGateway.getTaskResult(jobId.value(), myApplication.getTasks().get(0).getName());
-
-            // To get and print the job state
-            JobState jobState = schedulerGateway.getJobState(jobId.value());
-            LOGGER.info("The job " + jobId + " is " + jobState.getStatus());
-
-            // Wait for job to finish
-            schedulerGateway.waitForJob(jobId.value(), 10000);
-
-            // Get job results map
-            List<String> jobIds = new ArrayList<>();
-            jobIds.add(jobId.value());
-            Map<Long, Map<String, Serializable>> resultsMap = schedulerGateway.getJobResultMaps(jobIds);
-            LOGGER.info("Result Map : " + resultsMap.toString());
-
-            // Uncomment to remove node
-            //resourceManagerGateway.removeNode(deployedNodes.get(0), false);
-
-            // Uncomment to undeploy node source
-            //resourceManagerGateway.undeployNodeSource(nodeSourceName, false);
-
-            // Uncomment to remove node source
-            //resourceManagerGateway.removeNodeSource(nodeSourceName, false);
-
-            // Uncomment to kill a job
-            //schedulerGateway.killJob(jobId);
-
-
-        } catch (Exception e) {
-            LOGGER.error(" ... Error: " + e.getMessage());
-        } finally {
-            resourceManagerGateway.disconnect();
-            schedulerGateway.disconnect();
+            LOGGER.info("Waiting ...");
+            Thread.sleep(10000);
+        } catch (InterruptedException ie) {
+            LOGGER.warn("INTERRUPTION: ", ie);
         }
-        LOGGER.info("End.");
+
+        String jobId = jsonJob.optJSONObject("jobInformation").optString("id");
+
+        // Adding nodes 1 to components in a sequential fashion
+        LOGGER.info("Adding nodes 1 " + jsonNodesArray1 + " started.");
+        paGateway.addNodes(jsonNodesArray1, jobId);
+
+        // Adding nodes 2 to components in a sequential fashion
+        LOGGER.info("Adding nodes 2 " + jsonNodesArray2 + " started.");
+        paGateway.addNodes(jsonNodesArray2, jobId);
+
+        // Adding EMS monitoring to a component
+//        List<String> nodeNames = new LinkedList<>();
+//        nodeNames.add("component-DB-1-0");
+//        paGateway.addEmsDeployment(nodeNames, "Dummy_bearer");
+
+        // Verifying the job from the database
+        Job jobToSubmit = EntityManagerHelper.find(Job.class, jobId);
+        EntityManagerHelper.refresh(jobToSubmit);
+        LOGGER.info("Job found to submit: " + jobToSubmit.toString());
+
+        // Submitting the job to deployment
+        long submittedJobId = paGateway.submitJob(jobId);
+        LOGGER.info("Submitted job id: " + submittedJobId);
+
+        try {
+            LOGGER.info("Waiting ...");
+            Thread.sleep(30000);
+        } catch (InterruptedException ie) {
+            LOGGER.warn("INTERRUPTION: ", ie);
+        }
+
+        try {
+            paGateway.disconnect();
+        } catch (NotConnectedException nce) {
+            LOGGER.error("ERROR: ", nce);
+        }
+
+        LOGGER.info("END");
+
+        System.exit(0);
     }
 }
